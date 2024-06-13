@@ -15,7 +15,7 @@
 	{#if logado === false}
 		<Sidebar />
 	{/if}
-	<main class="flex h-full w-[90%] flex-col">
+	<main class="flex h-full w-full flex-col items-center justify-center">
 		<slot></slot>
 	</main>
 </div>
