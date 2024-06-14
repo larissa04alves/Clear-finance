@@ -14,7 +14,7 @@
 	export let initialValue: string = '';
 	console.log(initialValue);
 
-	let value: any = initialValue;
+	let value: DateValue | undefined = undefined;
 	const dispatch = createEventDispatcher();
 
 	$: {
