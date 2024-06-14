@@ -1,20 +1,9 @@
-<!-- <script lang="ts">
-	import * as Select from '$lib/components/ui/select';
-</script>
-
-<Select.Root>
-	<Select.Trigger class="h-12 w-[20rem]">
-		<Select.Value class="text-gray-400" placeholder="Status do pagamento" />
-	</Select.Trigger>
-	<Select.Content >
-		<Select.Item value="pago">Pago</Select.Item>
-		<Select.Item value="aberto">Em aberto</Select.Item>
-		<Select.Item value="atrasado">Atrasado</Select.Item>
-		<Select.Item value="cancelado">Cancelado</Select.Item>
-	</Select.Content>
-</Select.Root> -->
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select/index.js';
+
+	export let initialValue: string = '';
+
+	console.log('SelectStatus initialValue:', initialValue); // Adicione isso para verificar o valor
 
 	const status = [
 		{ value: 'pago', label: 'Pago' },
@@ -25,8 +14,8 @@
 </script>
 
 <Select.Root portal={null}>
-	<Select.Trigger class="w-[180px]">
-		<Select.Value placeholder="Selecione o status" />
+	<Select.Trigger class="h-12 w-[20rem]">
+		<Select.Value class="text-gray-400" placeholder="Status do pagamento" />
 	</Select.Trigger>
 	<Select.Content>
 		<Select.Group>

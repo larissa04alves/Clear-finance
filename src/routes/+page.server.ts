@@ -9,6 +9,20 @@ export const actions: Actions = {
 		const dataConta = data.get('data');
 		const statusConta = data.get('statusConta');
 
+		if (
+			typeof nomeConta !== 'string' ||
+			typeof valorConta !== 'string' ||
+			typeof dataConta !== 'string' ||
+			typeof statusConta !== 'string'
+		) {
+			return {
+				status: 400,
+				body: {
+					error: 'Todos os campos são obrigatórios e devem ser strings.'
+				}
+			};
+		}
+
 		if (!nomeConta || !valorConta || !dataConta || !statusConta) {
 			return {
 				status: 400,
@@ -18,10 +32,32 @@ export const actions: Actions = {
 			};
 		}
 
+		const nomeContaRegex = /^[a-zA-Z0-9]+$/;
+		if (!nomeContaRegex.test(nomeConta)) {
+			return {
+				status: 400,
+				body: {
+					error: 'O nome da conta deve conter apenas letras e números.'
+				}
+			};
+		}
+
+		const valorContaRegex = /^[0-9]+([.,][0-9]{1,2})?$/;
+		if (!valorContaRegex.test(valorConta)) {
+			return {
+				status: 400,
+				body: {
+					error: 'O valor da conta deve ser um número válido.'
+				}
+			};
+		}
+
+		const valorContaFormatado = valorConta.replace(',', '.');
+
 		try {
 			await db.query('INSERT INTO finance (nome, valor, data, status) VALUES ($1, $2, $3, $4)', [
 				nomeConta,
-				valorConta,
+				valorContaFormatado,
 				dataConta,
 				statusConta
 			]);
@@ -37,6 +73,60 @@ export const actions: Actions = {
 				status: 500,
 				body: {
 					error: 'Erro ao criar despesa. Por favor, tente novamente.'
+				}
+			};
+		}
+	},
+
+	excluirDespesa: async ({ request }) => {
+		const data = await request.formData();
+		const id = data.get('id');
+
+		try {
+			await db.query('DELETE FROM finance WHERE id = $1', [id]);
+			return {
+				status: 200,
+				body: {
+					message: 'Despesa excluída com sucesso!'
+				}
+			};
+		} catch (error) {
+			console.error('Erro ao excluir despesa:', error);
+			return {
+				status: 500,
+				body: {
+					error: 'Erro ao excluir despesa. Por favor, tente novamente.'
+				}
+			};
+		}
+	},
+	editarDespesa: async ({ request }) => {
+		const data = await request.formData();
+		const id = data.get('id');
+		const nomeConta = data.get('nomeConta');
+		const valorConta = data.get('valorConta');
+		const dataConta = data.get('data');
+		const statusConta = data.get('statusConta');
+
+		console.log(data);
+
+		try {
+			await db.query(
+				'UPDATE finance SET nome = $1, valor = $2, data = $3, status = $4 WHERE id = $5',
+				[nomeConta, valorConta, dataConta, statusConta, id]
+			);
+			return {
+				status: 200,
+				body: {
+					message: 'Despesa editada com sucesso!'
+				}
+			};
+		} catch (error) {
+			console.error('Erro ao editar despesa:', error);
+			return {
+				status: 500,
+				body: {
+					error: 'Erro ao editar despesa. Por favor, tente novamente.'
 				}
 			};
 		}

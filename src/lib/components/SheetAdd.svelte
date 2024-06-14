@@ -53,7 +53,7 @@
 				</div>
 			</div>
 			<Sheet.Footer>
-				<Sheet.Close asChild let:builder>
+				<Sheet.Close asChild>
 					<Button class="h-12 w-[20rem]" formaction="?/criarDespesa" type="submit"
 						>Salvar cadastro</Button
 					>

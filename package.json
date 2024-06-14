@@ -12,8 +12,8 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "^3.2.1",
-    "@sveltejs/kit": "^2.5.10",
+    "@sveltejs/adapter-auto": "^3.2.2",
+    "@sveltejs/kit": "^2.5.13",
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "@tailwindcss/typography": "^0.5.13",
     "@types/eslint": "^8.56.10",
@@ -32,7 +32,7 @@
     "tslib": "^2.6.3",
     "typescript": "^5.4.5",
     "typescript-eslint": "8.0.0-alpha.30",
-    "vite": "^5.2.13"
+    "vite": "^5.3.1"
   },
   "type": "module",
   "dependencies": {
