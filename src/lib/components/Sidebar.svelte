@@ -6,6 +6,18 @@
 	import LogOut from 'lucide-svelte/icons/log-out';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { page } from '$app/stores';
+
+	async function logout() {
+		const res = await fetch('/api/logout', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		if (res.ok) {
+			window.location.href = '/login';
+		}
+	}
 </script>
 
 <div class="flex w-[4%] flex-col items-center justify-between py-5">
@@ -30,9 +42,7 @@
 	</div>
 	<Tooltip.Root>
 		<Tooltip.Trigger asChild let:builder>
-			<Button builders={[builder]} variant="ghost" class=" hover:bg-[#6D28D9]/40" href="/login"
-				><LogOut /></Button
-			>
+			<Button variant="ghost" class=" hover:bg-[#6D28D9]/40" on:click={logout}><LogOut /></Button>
 		</Tooltip.Trigger>
 		<Tooltip.Content>
 			<p>Sair</p>

@@ -11,14 +11,25 @@
 	let selectedDespesa: any = null;
 
 	onMount(async () => {
-		const response = await fetch('http://localhost:5173/api/listarContas');
-		const data = await response.json();
-		despesas = data;
-		console.log(despesas);
+		await fetchDespesas();
 	});
+
+	async function fetchDespesas() {
+		try {
+			const response = await fetch('/api/listarContas');
+			const data = await response.json();
+			despesas = data;
+		} catch (error) {
+			console.error('Erro ao carregar despesas:', error);
+		}
+	}
 
 	function handleEdit(despesa: any) {
 		selectedDespesa = despesa;
+	}
+
+	function handleFormSubmit(e: CustomEvent<any>): void {
+		throw new Error('Function not implemented.');
 	}
 </script>
 
@@ -28,9 +39,9 @@
 		<SheetAdd />
 	</div>
 	<div class="flex justify-between gap-5">
-		<CardGraficos />
-		<CardGraficos />
-		<CardGraficos />
+		<CardGraficos {despesas} tipo="total" />
+		<CardGraficos {despesas} tipo="semana" />
+		<CardGraficos {despesas} tipo="dia" />
 	</div>
 	<div class="flex flex-col gap-3">
 		<Card class="flex h-12 items-center justify-between pr-14">
@@ -39,9 +50,9 @@
 			<h1 class="w-1/4 text-center text-[1.1rem] font-bold">Vencimento</h1>
 			<h1 class="w-1/4 text-center text-[1.1rem] font-bold">Status</h1>
 		</Card>
-		{#await despesas}
+		{#if despesas.length === 0}
 			<p>Carregando...</p>
-		{:then despesas}
+		{:else}
 			{#each despesas as despesa}
 				<form class="flex items-center justify-between gap-3">
 					<Card class="flex h-12 w-1/4 items-center justify-center text-center">
@@ -58,11 +69,11 @@
 					</Card>
 					<Card class="flex h-12 w-14 items-center">
 						<Button class="flex h-12 w-full bg-transparent" on:click={() => handleEdit(despesa)}>
-							<SheetEdit {despesa} />
+							<SheetEdit {despesa} on:submit={handleFormSubmit} />
 						</Button>
 					</Card>
 				</form>
 			{/each}
-		{/await}
+		{/if}
 	</div>
 </div>

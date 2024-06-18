@@ -6,16 +6,16 @@
 	export let data: LayoutData;
 	let logado = data.logado;
 
-	console.log(logado);
+	console.log(data);
 </script>
 
 <ModeWatcher defaultMode={'dark'} />
 
 <div class="flex h-full w-full">
-	{#if logado === false}
+	{#if logado}
 		<Sidebar />
 	{/if}
 	<main class="flex h-full w-full flex-col items-center justify-center">
-		<slot></slot>
+		<slot {logado}></slot>
 	</main>
 </div>

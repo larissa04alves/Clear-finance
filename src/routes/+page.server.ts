@@ -1,4 +1,5 @@
 import db from '$lib/database/db';
+import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
 export const actions: Actions = {
@@ -85,8 +86,8 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const id = data.get('id');
 		const nomeConta = data.get('nomeConta');
-		const valorConta = data.get('valorConta');
-		const dataConta = data.get('data');
+		const valorConta = data.get('valorConta') as string;
+		const dataConta = data.get('dataConta');
 		const statusConta = data.get('statusConta');
 
 		if (!id || !nomeConta || !valorConta || !dataConta || !statusConta) {
@@ -98,25 +99,35 @@ export const actions: Actions = {
 			};
 		}
 
+		const valorContaRegex = /^[0-9]+([.,][0-9]{1,2})?$/;
+		if (!valorContaRegex.test(valorConta)) {
+			return {
+				status: 400,
+				body: {
+					error: 'O valor da conta deve ser um número válido.'
+				}
+			};
+		}
+
+		const valorContaFormatado = valorConta.replace(',', '.');
+
 		// Formatar a data
 		const date = new Date(dataConta as string);
+		if (isNaN(date.getTime())) {
+			return {
+				status: 400,
+				body: {
+					error: 'Data inválida.'
+				}
+			};
+		}
 		const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
 
 		try {
-			const result = await db.query(
+			await db.query(
 				'UPDATE finance SET nome = $1, valor = $2, data = $3, status = $4 WHERE id = $5',
-				[nomeConta, valorConta, formattedDate, statusConta, id]
+				[nomeConta, valorContaFormatado, formattedDate, statusConta, id]
 			);
-
-			if (result.rowCount === 0) {
-				return {
-					status: 404,
-					body: {
-						error: 'Despesa não encontrada.'
-					}
-				};
-			}
-
 			return {
 				status: 200,
 				body: {
@@ -132,5 +143,16 @@ export const actions: Actions = {
 				}
 			};
 		}
+	},
+
+	logoutUser: async ({ cookies }) => {
+		// Remove o cookie de autenticação
+		cookies.set('logado', '', {
+			path: '/',
+			maxAge: -1
+		});
+
+		// Redireciona para a página de login após o logout
+		throw redirect(303, '/login');
 	}
 };
