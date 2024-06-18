@@ -4,6 +4,7 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import SelectStatusEdit from './SelectStatusEdit.svelte';
+	import { Label } from '$lib/components/ui/label/index.js';
 
 	export let despesa: any = {};
 
@@ -11,16 +12,6 @@
 	let valorConta = despesa.valor;
 	let dataConta = despesa.data;
 	let statusConta = despesa.status;
-
-	// Função para formatar a data no formato YYYY-MM-DD
-	function formatDate(dateStr: any) {
-		const [day, month, year] = dateStr.split('/');
-		return `${year}-${month}-${day}`;
-	}
-
-	$: {
-		dataConta = formatDate(despesa.data);
-	}
 </script>
 
 <Sheet.Root>
@@ -64,20 +55,27 @@
 						id="dataConta"
 						name="dataConta"
 						bind:value={dataConta}
+						placeholder="Data (dd/mm/aaaa)"
 						autocapitalize="none"
 						autocomplete="off"
 						autocorrect="off"
 					/>
-					<Input
-						class="h-12 w-[20rem]"
-						id="statusConta"
-						name="statusConta"
-						bind:value={statusConta}
-						placeholder="Status"
-						autocapitalize="none"
-						autocomplete="off"
-						autocorrect="off"
-					/>
+					<div class="flex flex-col gap-2">
+						<Label>Status Atual</Label>
+						<Input
+							class="h-12 w-[20rem]"
+							id="statusConta"
+							name="statusConta"
+							bind:value={statusConta}
+							placeholder="Status"
+							autocapitalize="none"
+							autocomplete="off"
+							autocorrect="off"
+							disabled={true}
+						/>
+						<SelectStatusEdit />
+					</div>
+
 					<input type="hidden" name="id" value={despesa.id} />
 				</div>
 			</div>

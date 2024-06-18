@@ -11,7 +11,7 @@
 
 <Select.Root portal={null}>
 	<Select.Trigger class="h-12 w-[20rem]">
-		<Select.Value class="text-gray-400" placeholder="Status do pagamento" />
+		<Select.Value class="text-gray-400" placeholder="Novo Status" />
 	</Select.Trigger>
 	<Select.Content>
 		<Select.Group>
