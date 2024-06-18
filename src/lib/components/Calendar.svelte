@@ -11,9 +11,6 @@
 		dateStyle: 'long'
 	});
 
-	export let initialValue: string = '';
-	console.log(initialValue);
-
 	let value: DateValue | undefined = undefined;
 	const dispatch = createEventDispatcher();
 
@@ -35,7 +32,7 @@
 			builders={[builder]}
 		>
 			<CalendarIcon class="mr-2 h-4 w-4" />
-			{value ? df.format(value.toDate(getLocalTimeZone())) : initialValue}
+			{value ? df.format(value.toDate(getLocalTimeZone())) : 'Data do vencimento'}
 		</Button>
 	</Popover.Trigger>
 	<Popover.Content class="w-auto p-0" align="start">

@@ -37,6 +37,7 @@
 						id="nomeConta"
 						placeholder="Nome da conta"
 						autocapitalize="none"
+						autocomplete="off"
 						autocorrect="off"
 					/>
 					<Input
@@ -45,6 +46,7 @@
 						id="valorConta"
 						placeholder="Valor"
 						autocapitalize="none"
+						autocomplete="off"
 						autocorrect="off"
 					/>
 					<Calendar on:dateSelected={handleDateSelected} />

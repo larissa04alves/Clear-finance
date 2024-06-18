@@ -57,7 +57,7 @@
 						<Badge>{despesa.status}</Badge>
 					</Card>
 					<Card class="flex h-12 w-14 items-center">
-						<Button on:click={() => handleEdit(despesa)}>
+						<Button class="flex h-12 w-full bg-transparent" on:click={() => handleEdit(despesa)}>
 							<SheetEdit {despesa} />
 						</Button>
 					</Card>

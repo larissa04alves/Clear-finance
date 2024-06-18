@@ -5,39 +5,15 @@ export const actions: Actions = {
 	criarDespesa: async ({ request }) => {
 		const data = await request.formData();
 		const nomeConta = data.get('nomeConta');
-		const valorConta = data.get('valorConta');
+		const valorConta = data.get('valorConta') as string;
 		const dataConta = data.get('data');
 		const statusConta = data.get('statusConta');
-
-		if (
-			typeof nomeConta !== 'string' ||
-			typeof valorConta !== 'string' ||
-			typeof dataConta !== 'string' ||
-			typeof statusConta !== 'string'
-		) {
-			return {
-				status: 400,
-				body: {
-					error: 'Todos os campos são obrigatórios e devem ser strings.'
-				}
-			};
-		}
 
 		if (!nomeConta || !valorConta || !dataConta || !statusConta) {
 			return {
 				status: 400,
 				body: {
 					error: 'Todos os campos são obrigatórios.'
-				}
-			};
-		}
-
-		const nomeContaRegex = /^[a-zA-Z0-9]+$/;
-		if (!nomeContaRegex.test(nomeConta)) {
-			return {
-				status: 400,
-				body: {
-					error: 'O nome da conta deve conter apenas letras e números.'
 				}
 			};
 		}
@@ -54,11 +30,15 @@ export const actions: Actions = {
 
 		const valorContaFormatado = valorConta.replace(',', '.');
 
+		// Formatar a data
+		const date = new Date(dataConta as string);
+		const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+
 		try {
 			await db.query('INSERT INTO finance (nome, valor, data, status) VALUES ($1, $2, $3, $4)', [
 				nomeConta,
 				valorContaFormatado,
-				dataConta,
+				formattedDate,
 				statusConta
 			]);
 			return {
@@ -100,6 +80,7 @@ export const actions: Actions = {
 			};
 		}
 	},
+
 	editarDespesa: async ({ request }) => {
 		const data = await request.formData();
 		const id = data.get('id');
@@ -108,13 +89,34 @@ export const actions: Actions = {
 		const dataConta = data.get('data');
 		const statusConta = data.get('statusConta');
 
-		console.log(data);
+		if (!id || !nomeConta || !valorConta || !dataConta || !statusConta) {
+			return {
+				status: 400,
+				body: {
+					error: 'Todos os campos são obrigatórios.'
+				}
+			};
+		}
+
+		// Formatar a data
+		const date = new Date(dataConta as string);
+		const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
 
 		try {
-			await db.query(
+			const result = await db.query(
 				'UPDATE finance SET nome = $1, valor = $2, data = $3, status = $4 WHERE id = $5',
-				[nomeConta, valorConta, dataConta, statusConta, id]
+				[nomeConta, valorConta, formattedDate, statusConta, id]
 			);
+
+			if (result.rowCount === 0) {
+				return {
+					status: 404,
+					body: {
+						error: 'Despesa não encontrada.'
+					}
+				};
+			}
+
 			return {
 				status: 200,
 				body: {
