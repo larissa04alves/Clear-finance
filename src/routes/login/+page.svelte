@@ -25,8 +25,8 @@
 				placeholder="Email"
 				name="email"
 				autocapitalize="none"
-				autocomplete="email"
 				autocorrect="off"
+				autocomplete="off"
 			/>
 			<Input
 				class="h-14 w-1/2 font-semibold"
@@ -36,6 +36,7 @@
 				placeholder="Senha"
 				autocapitalize="none"
 				autocorrect="off"
+				autocomplete="off"
 			/>
 
 			<div class="flex w-full flex-col items-center gap-3">

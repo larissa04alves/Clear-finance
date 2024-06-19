@@ -40,7 +40,7 @@
 			<h1 class="w-1/4 text-center text-[1.1rem] font-bold">Vencimento</h1>
 			<h1 class="w-1/4 text-center text-[1.1rem] font-bold">Status</h1>
 		</Card>
-		{#if despesas.length === 0}
+		{#if despesas.length <= 0}
 			<p>Carregando...</p>
 		{:else}
 			{#each despesas as despesa}

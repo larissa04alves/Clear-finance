@@ -12,6 +12,16 @@
 	let valorConta = despesa.valor;
 	let dataConta = despesa.data;
 	let statusConta = despesa.status;
+
+	// Função para formatar a data no formato YYYY-MM-DD
+	function formatDate(dateStr: any) {
+		const [day, month, year] = dateStr.split('/');
+		return `${year}-${month}-${day}`;
+	}
+
+	$: {
+		dataConta = formatDate(despesa.data);
+	}
 </script>
 
 <Sheet.Root>
@@ -55,7 +65,6 @@
 						id="dataConta"
 						name="dataConta"
 						bind:value={dataConta}
-						placeholder="Data (dd/mm/aaaa)"
 						autocapitalize="none"
 						autocomplete="off"
 						autocorrect="off"
@@ -75,7 +84,6 @@
 						/>
 						<SelectStatusEdit />
 					</div>
-
 					<input type="hidden" name="id" value={despesa.id} />
 				</div>
 			</div>

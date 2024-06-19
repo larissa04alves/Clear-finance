@@ -7,7 +7,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const nomeConta = data.get('nomeConta');
 		const valorConta = data.get('valorConta') as string;
-		const dataConta = data.get('dataConta');
+		const dataConta = data.get('data');
 		const statusConta = data.get('statusConta');
 
 		if (!nomeConta || !valorConta || !dataConta || !statusConta) {
@@ -31,11 +31,15 @@ export const actions: Actions = {
 
 		const valorContaFormatado = valorConta.replace(',', '.');
 
+		// Formatar a data
+		const date = new Date(dataConta as string);
+		const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+
 		try {
 			await db.query('INSERT INTO finance (nome, valor, data, status) VALUES ($1, $2, $3, $4)', [
 				nomeConta,
 				valorContaFormatado,
-				dataConta,
+				formattedDate,
 				statusConta
 			]);
 			return {
@@ -86,6 +90,9 @@ export const actions: Actions = {
 		const dataConta = data.get('dataConta');
 		const statusConta = data.get('statusConta');
 
+		console.log(dataConta);
+		console.log(typeof dataConta);
+
 		if (!id || !nomeConta || !valorConta || !dataConta || !statusConta) {
 			return {
 				status: 400,
@@ -107,10 +114,22 @@ export const actions: Actions = {
 
 		const valorContaFormatado = valorConta.replace(',', '.');
 
+		// Formatar a data
+		const date = new Date(dataConta as string);
+		if (isNaN(date.getTime())) {
+			return {
+				status: 400,
+				body: {
+					error: 'Data inválida.'
+				}
+			};
+		}
+		const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+
 		try {
 			await db.query(
 				'UPDATE finance SET nome = $1, valor = $2, data = $3, status = $4 WHERE id = $5',
-				[nomeConta, valorContaFormatado, dataConta, statusConta, id]
+				[nomeConta, valorContaFormatado, formattedDate, statusConta, id]
 			);
 			return {
 				status: 200,
